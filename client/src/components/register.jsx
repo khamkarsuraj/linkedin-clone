@@ -6,6 +6,7 @@ function Register() {
     const [email, setemail] = useState("");
     const [first, setfirst] = useState("");
     const [last, setlast] = useState("");
+    
     const [password, setpassword] = useState("");
 
     const onSubmitForm = async e => {
