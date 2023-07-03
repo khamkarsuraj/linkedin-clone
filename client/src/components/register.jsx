@@ -6,7 +6,6 @@ function Register() {
     const [email, setemail] = useState("");
     const [first, setfirst] = useState("");
     const [last, setlast] = useState("");
-    
     const [password, setpassword] = useState("");
 
     const onSubmitForm = async e => {
@@ -16,17 +15,18 @@ function Register() {
             const res = await fetch("http://localhost:5001/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"},
-                body: JSON.stringify(body)
+                body: JSON.stringify(body),
+                withCredentials: true
             });
-            window.location = "/";
-            console.log(res);
+            res.json();
+            window.location.href = "/signin";
         } catch (err) {
             console.log(err.message);
         }
     };
 
     return (
-        <div className="stone-100 flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="stone-100 flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
@@ -121,7 +121,7 @@ function Register() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
-                Sign in
+                Register
               </button>
             </div>
           </form>
