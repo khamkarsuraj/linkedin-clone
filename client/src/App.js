@@ -8,7 +8,7 @@ import Home from "./components/home";
 import SignIn from './components/signin';
 import Register from './components/register';
 import Forget from './components/forget';
-import Welcome from './components/welcome';
+import Profile from './components/profile';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
           <Route path="/signin" element={<SignIn></SignIn>}></Route>
           <Route path="/register" element={<Register></Register>}></Route>
           <Route path="/forget" element={<Forget></Forget>}></Route>
-          <Route path="/welcome" element={<Welcome></Welcome>}></Route>
+          <Route path="/profile" element={<Profile></Profile>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

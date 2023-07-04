@@ -62,7 +62,7 @@ app.post("/signin", async(req, res) =>{
     }
 });
 
-app.get('/welcome', authenticateToken, async (req, res) => {
+app.get('/profile', authenticateToken, async (req, res) => {
     try {
         // NOTE: Don't Remove this console.log, Added to check if getting cookies or not
         // console.log("Access Token Cookie ", req.headers['authorization']);

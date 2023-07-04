@@ -18,7 +18,7 @@ function SignIn() {
 
           // TODO: Use cookies instead of localStorage
           localStorage.setItem('token', res.data.accessToken);
-          window.location.href = "/welcome";
+          window.location.href = "/profile";
       } catch (err) {
           console.log(err.message);
       }
