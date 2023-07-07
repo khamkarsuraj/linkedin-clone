@@ -4,6 +4,7 @@ const cors = require("cors");
 const pool = require("./database")
 //const bcrypt = require("bcrypt");
 const jwtTokens = require("./utils/jwt-helpers");
+const jwtDecode = require("./utils/jwt-decode");
 const dotenv = require("dotenv");
 const authenticateToken = require("./middleware/authorization");
 const cookieParser = require('cookie-parser');
@@ -64,15 +65,50 @@ app.post("/signin", async(req, res) =>{
 
 app.get('/profile', authenticateToken, async (req, res) => {
     try {
-        // NOTE: Don't Remove this console.log, Added to check if getting cookies or not
-        // console.log("Access Token Cookie ", req.headers['authorization']);
-        const users = await pool.query('SELECT * FROM users');
-        res.json({users : users.rows});
+        const authHeader = req.headers['authorization']; //Bearer TOKEN
+        const token = authHeader && authHeader.split(' ')[1];
+        const user_info = jwtDecode(token)
+        const info = await pool.query('SELECT * FROM users WHERE email = $1', [user_info.email]);
+        res.json({user: info.rows[0]});
     } catch (error) {
       res.status(500).json({error: error.message});
     }
-  });
+});
 
+app.get('/edit', authenticateToken, async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization']; //Bearer TOKEN
+        const token = authHeader && authHeader.split(' ')[1];
+        const user_info = jwtDecode(token)
+        const info = await pool.query('SELECT u.user_id, u.first_name, u.last_name, ui.phone, ui.address, ui.birthday FROM users u INNER JOIN user_info ui ON u.user_id=ui.user_id AND u.user_id=$1;', [user_info.user_id]);
+        res.json({user: info.rows[0]});
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
+});
+
+app.post("/update", async(req, res) =>{
+    try {
+        const user_info = req.body;
+        // this code is to update existing user into system
+        console.log('user', user_info);
+        const updated_user = await pool.query (
+            `WITH updated_data AS (
+                UPDATE users
+                SET first_name = $1, last_name = $2
+                WHERE user_id = $3
+                RETURNING user_id
+              )
+              UPDATE user_info
+              SET phone = $4, address = $5, birthday = $6
+              WHERE user_id IN (SELECT user_id FROM updated_data);`,
+            [user_info.first, user_info.last, user_info.id, user_info.phone, user_info.address, user_info.birthday]
+        );
+        res.json(updated_user);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
 
 // To connect React (Frontend)
 app.listen(5001, () => {

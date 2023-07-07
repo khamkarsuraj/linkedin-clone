@@ -9,6 +9,7 @@ import SignIn from './components/signin';
 import Register from './components/register';
 import Forget from './components/forget';
 import Profile from './components/profile';
+import Edit from './components/edit';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/register" element={<Register></Register>}></Route>
           <Route path="/forget" element={<Forget></Forget>}></Route>
           <Route path="/profile" element={<Profile></Profile>}></Route>
+          <Route path="/edit" element={<Edit></Edit>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

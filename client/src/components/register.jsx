@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Register() {
     const [email, setemail] = useState("");
@@ -12,7 +13,7 @@ function Register() {
         e.preventDefault();
         try {
             const body = { email, first, last, password };
-            const res = await fetch("http://localhost:5001/register", {
+            const res = axios.post("http://localhost:5001/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify(body),
