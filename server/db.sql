@@ -10,3 +10,13 @@ create table users
     email varchar(40) not null unique,
     password varchar(20) not null
 );
+
+create table user_info
+(
+    user_id int references users(user_id),
+    phone bigint,
+    address varchar(70),
+    birthday timestamp,
+    headline varchar(100),
+    about text
+);

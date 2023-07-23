@@ -29,7 +29,8 @@ app.post("/register", async(req, res) =>{
             "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)",
             [user_info.first, user_info.last, user_info.email, user_info.password]
         );
-        res.json(jwtTokens(new_user.rows[0]));
+        //res.json(jwtTokens(new_user.rows[0]));
+        res.json(new_user);
     } catch (err) {
         console.error(err.message);
     }
@@ -77,11 +78,17 @@ app.get('/profile', authenticateToken, async (req, res) => {
 
 app.get('/edit', authenticateToken, async (req, res) => {
     try {
-        const authHeader = req.headers['authorization']; //Bearer TOKEN
+        const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
         const user_info = jwtDecode(token)
         const info = await pool.query('SELECT u.user_id, u.first_name, u.last_name, ui.phone, ui.address, ui.birthday FROM users u INNER JOIN user_info ui ON u.user_id=ui.user_id AND u.user_id=$1;', [user_info.user_id]);
-        res.json({user: info.rows[0]});
+        /* If user doesn't inserted details yet, return none */
+        if (info.rowCount === 0) {
+            console.log(user_info);
+            //res.json('None');
+            return res.json({user: user_info})
+        }
+        return res.json({user: info.rows[0]});
     } catch (error) {
       res.status(500).json({error: error.message});
     }

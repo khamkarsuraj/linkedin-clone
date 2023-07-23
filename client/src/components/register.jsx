@@ -12,16 +12,30 @@ function Register() {
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = { email, first, last, password };
-            const res = axios.post("http://localhost:5001/register", {
+            //const body = { email, first, last, password };
+            /*const res = await fetch("http://localhost:5001/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify(body),
                 withCredentials: true
+            });*/
+
+            await axios.post("http://localhost:5001/register", {
+              email: email,
+              first: first,
+              last: last,
+              password: password,
+            })
+            .then(() => {
+              console.log('Then');
+              return window.location.href = "/signin"
+            })
+            .catch((err) => {
+              console.log('Error');
+              console.log(err.message);
             });
-            res.json();
-            window.location.href = "/signin";
         } catch (err) {
+            console.log('Catch');
             console.log(err.message);
         }
     };
@@ -97,11 +111,6 @@ function Register() {
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="text-sm">
-                <Link to="/forget" className="font-semibold leading-6 text-blue-600 hover:text-blue-500">
-                Forgot Password?
-                </Link>
-                </div>
               </div>
               <div className="mt-2">
                 <input

@@ -7,7 +7,7 @@ import About from "./components/about_us";
 import Home from "./components/home";
 import SignIn from './components/signin';
 import Register from './components/register';
-import Forget from './components/forget';
+import Forgot from './components/forgot';
 import Profile from './components/profile';
 import Edit from './components/edit';
 
@@ -27,7 +27,7 @@ function App() {
           <Route path="/about" element={<About></About>}></Route>
           <Route path="/signin" element={<SignIn></SignIn>}></Route>
           <Route path="/register" element={<Register></Register>}></Route>
-          <Route path="/forget" element={<Forget></Forget>}></Route>
+          <Route path="/forgot" element={<Forgot></Forgot>}></Route>
           <Route path="/profile" element={<Profile></Profile>}></Route>
           <Route path="/edit" element={<Edit></Edit>}></Route>
         </Routes>

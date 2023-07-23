@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function Edit() {
+    // Global Variable
     const [userInfo, setUserInfo] = useState(null);
 
     const [id, setid] = useState("");
@@ -15,6 +16,7 @@ function Edit() {
     useEffect(() => {
         async function onPageLoadFun() {
             try {
+                // Get data and set into variables for further operations
                 const res = await axios.get("http://localhost:5001/edit", {
                     headers: { authorization: "bearer " + localStorage.getItem("token") }
                 });
@@ -36,7 +38,6 @@ function Edit() {
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = { id, first, last, address, phone, birthday };
             axios.post("http://localhost:5001/update", {
                 id: id,
                 first: first,
@@ -151,7 +152,7 @@ function Edit() {
                             </div>
                         </form>
                     </div>
-                ) : (<div>Something went wrong</div>) 
+                ) : (<div>Something went wrong</div>)
                 }
 
                 <p className="mt-10 text-center text-sm text-gray-500">

@@ -9,7 +9,7 @@ import job from '../assets/work.png';
 import user from '../assets/user.png'; */
 
 /* Routes you don't want show navigation bar */
-const listNoNavBar = ["/", "/about", "/signin", "/register"];
+const listNoNavBar = ["/", "/about", "/signin", "/register", "/forgot"];
 
 function Navbar() {
     if (listNoNavBar.includes(useLocation().pathname)) return null;
