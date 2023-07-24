@@ -98,17 +98,8 @@ app.post("/update", async(req, res) =>{
     try {
         const user_info = req.body;
         // this code is to update existing user into system
-        console.log('user', user_info);
         const updated_user = await pool.query (
-            `WITH updated_data AS (
-                UPDATE users
-                SET first_name = $1, last_name = $2
-                WHERE user_id = $3
-                RETURNING user_id
-              )
-              UPDATE user_info
-              SET phone = $4, address = $5, birthday = $6
-              WHERE user_id IN (SELECT user_id FROM updated_data);`,
+            `CALL upsert_for_user_info ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::BIGINT, $5::VARCHAR, $6::TIMESTAMP);`,
             [user_info.first, user_info.last, user_info.id, user_info.phone, user_info.address, user_info.birthday]
         );
         res.json(updated_user);
