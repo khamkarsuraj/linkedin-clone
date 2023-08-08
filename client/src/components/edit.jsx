@@ -9,6 +9,7 @@ function Edit() {
     const [id, setid] = useState("");
     const [first, setfirst] = useState("");
     const [last, setlast] = useState("");
+    const [headline, setHeadline] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [birthday, setBirthday] = useState("");
@@ -17,16 +18,17 @@ function Edit() {
         async function onPageLoadFun() {
             try {
                 // Get data and set into variables for further operations
-                const res = await axios.get("http://localhost:5001/edit", {
+                const res = await axios.get("http://localhost:5001/profile", {
                     headers: { authorization: "bearer " + localStorage.getItem("token") }
                 });
                 setUserInfo(res.data);
                 setid(res.data.user.user_id);
                 setfirst(res.data.user.first_name);
                 setlast(res.data.user.last_name);
+                setHeadline(res.data.user.headline);
                 setAddress(res.data.user.address);
                 setPhone(res.data.user.phone);
-                setBirthday(res.data.user.birthday);
+                setBirthday(new Date(res.data.user.birthday).toLocaleDateString());
             } catch (error) {
                 console.log(error);
             }
@@ -42,6 +44,7 @@ function Edit() {
                 id: id,
                 first: first,
                 last: last,
+                head: headline,
                 phone: phone,
                 address: address,
                 birthday: birthday,
@@ -89,6 +92,22 @@ function Edit() {
                                     type="name"
                                     defaultValue={userInfo.user.last_name}
                                     onChange={e => setlast(e.target.value)}
+                                    className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label htmlFor="head" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Headline
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                    id="head"
+                                    name="head"
+                                    type="text"
+                                    defaultValue={userInfo.user.headline}
+                                    onChange={e => setHeadline(e.target.value)}
                                     className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>

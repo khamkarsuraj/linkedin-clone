@@ -16,7 +16,7 @@ create table user_info
     user_id int references users(user_id),
     phone bigint,
     address varchar(70),
-    birthday timestamp,
+    birthday date,
     headline varchar(100),
     about text
 );
@@ -25,10 +25,11 @@ create table user_info
 CREATE OR REPLACE PROCEDURE upsert_for_user_info (
     fn VARCHAR(25),
     ln VARCHAR(25),
+    head VARCHAR(100),
     ui INTEGER,
     cell BIGINT,
     add VARCHAR(100),
-    bday TIMESTAMP
+    bday DATE
 )
 AS $$
 DECLARE
@@ -40,7 +41,7 @@ BEGIN
 
     IF cnt = 0 THEN
         UPDATE users SET first_name = fn, last_name = ln WHERE user_id = ui;
-        INSERT INTO user_info (user_id, phone, address, birthday) VALUES(ui, cell, add, bday);
+        INSERT INTO user_info (user_id, headline, phone, address, birthday) VALUES(ui, head, cell, add, bday);
     ELSE
         WITH updated_data AS (
             UPDATE users
@@ -49,7 +50,7 @@ BEGIN
             RETURNING user_id
         )
         UPDATE user_info
-        SET user_id=ui, phone = cell, address = add, birthday = bday
+        SET user_id=ui, headline=head, phone = cell, address = add, birthday = bday
         WHERE user_id IN (SELECT user_id FROM updated_data);
     END IF;
 END;

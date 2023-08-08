@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { PhoneIcon, MapPinIcon, EnvelopeIcon, CakeIcon} from "@heroicons/react/20/solid";
 import axios from 'axios';
+import 'reactjs-popup/dist/index.css';
 
 function Profile() {
     const [userInfo, setUserInfo] = useState(null);
+    const [open, setOpen] = useState(false)
+
+    const cancelButtonRef = useRef(null)
 
     function editInfo() {
         window.location.href = "/edit";
@@ -15,7 +21,7 @@ function Profile() {
                 const res = await axios.get("http://localhost:5001/profile", {
                     headers: { authorization: "bearer " + localStorage.getItem("token") }
                 });
-                setUserInfo(res.data);
+                setUserInfo(res.data.user);
             } catch (error) {
                 console.log(error);
             }
@@ -31,15 +37,105 @@ function Profile() {
                 {/* Left side flex */}
                 <div className='flex-col basis-3/4 space-y-4'>
                     <div className='flex-col bg-white rounded-lg px-8 py-5 space-y-1'>
+                        {/* Cover Photo Details */}
                         <div className='rounded-lg px-8 py-5'>Cover Photo</div>
+
+                        {/* Nameplate block */}
                         <div className='flex flex-row grid grid-cols-2 rounded-lg '>
                             <div className='basis-3/4 rounded-lg px-8 py-5'>
                                 {userInfo ? (
                                     <div>
-                                        <p>{userInfo.user.first_name} {userInfo.user.last_name}</p>
-                                        <p>{userInfo.user.email}</p>
+                                        <div className='text-xl font-bold'>
+                                            <p>{userInfo.first_name} {userInfo.last_name}</p>
+                                        </div>
+                                        <div> {userInfo.headline} </div>
+                                        <div className='flex flex-row gap-1'>
+                                            <div className='text-sm text-slate-500'> {userInfo.address} </div>
+                                            <div className='text-sm'> | </div>
+                                            <div className='text-sm font-bold text-blue-700'>
+                                                <button onClick={() => setOpen(true)}>Contact Info
+                                                    <Transition.Root show={open} as={Fragment}>
+                                                        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+                                                            <Transition.Child
+                                                            as={Fragment}
+                                                            enter="ease-out duration-300"
+                                                            enterFrom="opacity-0"
+                                                            enterTo="opacity-100"
+                                                            leave="ease-in duration-200"
+                                                            leaveFrom="opacity-100"
+                                                            leaveTo="opacity-0"
+                                                            >
+                                                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                                                            </Transition.Child>
+
+                                                            <div className="fixed inset-0 z-10 overflow-y-auto">
+                                                                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                                                    <Transition.Child
+                                                                    as={Fragment}
+                                                                    enter="ease-out duration-300"
+                                                                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                                                    enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                                                    leave="ease-in duration-200"
+                                                                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                                                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                                                    >
+                                                                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                                                        <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                                                        <div className="sm:flex sm:items-start">
+                                                                            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                                            <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900 py-2">
+                                                                                {userInfo.first_name} {userInfo.last_name}
+                                                                            </Dialog.Title>
+                                                                            <hr className='py-2'></hr>
+                                                                            <div className="mt-2">
+                                                                                <div className='flex flex-row py-3'>
+                                                                                    <div className='basis-1/4 text-base font-bold px-10'>
+                                                                                        <PhoneIcon class="h-6 w-6 text-gray-500" />
+                                                                                    </div>
+                                                                                    <div className='basis-3/4'>{userInfo.phone}</div>
+                                                                                </div>
+                                                                                <div className='flex flex-row py-3'>
+                                                                                    <div className='basis-1/4 text-base font-bold px-10'>
+                                                                                        <MapPinIcon class="h-6 w-6 text-gray-500" />
+                                                                                    </div>
+                                                                                    <div className='basis-3/4'>{userInfo.address}</div>
+                                                                                </div>
+                                                                                <div className='flex flex-row py-3'>
+                                                                                    <div className='basis-1/4 text-base font-bold px-10'>
+                                                                                        <EnvelopeIcon class="h-6 w-6 text-gray-500" />
+                                                                                    </div>
+                                                                                    <div className='basis-3/4'>{userInfo.email}</div>
+                                                                                </div>
+                                                                                <div className='flex flex-row py-3'>
+                                                                                    <div className='basis-1/4 text-base font-bold px-10'>
+                                                                                        <CakeIcon class="h-6 w-6 text-gray-500" />
+                                                                                    </div>
+                                                                                    <div className='basis-3/4'>{new Date(userInfo.birthday).toDateString()}</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                                                            <button
+                                                                                type="button"
+                                                                                className="inline-flex w-full justify-center rounded-md bg-red-300 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-300 sm:ml-3 sm:w-auto"
+                                                                                onClick={() => setOpen(false)}
+                                                                            >
+                                                                                Close
+                                                                            </button>
+                                                                        </div>
+                                                                    </Dialog.Panel>
+                                                                    </Transition.Child>
+                                                                </div>
+                                                            </div>
+                                                        </Dialog>
+                                                    </Transition.Root>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                ) : ( <div>Loading...</div> )}
+                                ) : ( <div className='text-xl font-bold'>Loading...</div> )}
                             </div>
                             <div className='place-self-end basis-1/4 rounded-lg px-8 py-5'>
                                 <button

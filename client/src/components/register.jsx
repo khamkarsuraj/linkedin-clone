@@ -5,25 +5,17 @@ import axios from 'axios';
 
 function Register() {
     const [email, setemail] = useState("");
-    const [first, setfirst] = useState("");
-    const [last, setlast] = useState("");
+    const [first_name, setfirst] = useState("");
+    const [last_name, setlast] = useState("");
     const [password, setpassword] = useState("");
 
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            //const body = { email, first, last, password };
-            /*const res = await fetch("http://localhost:5001/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json"},
-                body: JSON.stringify(body),
-                withCredentials: true
-            });*/
-
             await axios.post("http://localhost:5001/register", {
               email: email,
-              first: first,
-              last: last,
+              first_name: first_name,
+              last_name: last_name,
               password: password,
             })
             .then(() => {
@@ -68,7 +60,7 @@ function Register() {
                   value={email}
                   onChange={e => setemail(e.target.value)}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -82,10 +74,10 @@ function Register() {
                   id="first"
                   name="first"
                   type="name"
-                  value={first}
+                  value={first_name}
                   onChange={e => setfirst(e.target.value)}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -99,9 +91,9 @@ function Register() {
                   id="last"
                   name="last"
                   type="name"
-                  value={last}
+                  value={last_name}
                   onChange={e => setlast(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -121,7 +113,7 @@ function Register() {
                   value={password}
                   onChange={e => setpassword(e.target.value)}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>

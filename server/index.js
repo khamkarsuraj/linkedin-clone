@@ -27,9 +27,9 @@ app.post("/register", async(req, res) =>{
         // this code is to add new user into system
         const new_user = await pool.query(
             "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)",
-            [user_info.first, user_info.last, user_info.email, user_info.password]
+            [user_info.first_name, user_info.last_name, user_info.email, user_info.password]
         );
-        //res.json(jwtTokens(new_user.rows[0]));
+        //jwtTokens(new_user.rows[0]);
         res.json(new_user);
     } catch (err) {
         console.error(err.message);
@@ -69,26 +69,8 @@ app.get('/profile', authenticateToken, async (req, res) => {
         const authHeader = req.headers['authorization']; //Bearer TOKEN
         const token = authHeader && authHeader.split(' ')[1];
         const user_info = jwtDecode(token)
-        const info = await pool.query('SELECT * FROM users WHERE email = $1', [user_info.email]);
+        const info = await pool.query('SELECT u.user_id, u.email, u.first_name, u.last_name, ui.headline, ui.phone, ui.address, ui.birthday FROM users u LEFT JOIN user_info ui ON u.user_id=ui.user_id WHERE u.user_id=$1;', [user_info.user_id]);
         res.json({user: info.rows[0]});
-    } catch (error) {
-      res.status(500).json({error: error.message});
-    }
-});
-
-app.get('/edit', authenticateToken, async (req, res) => {
-    try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        const user_info = jwtDecode(token)
-        const info = await pool.query('SELECT u.user_id, u.first_name, u.last_name, ui.phone, ui.address, ui.birthday FROM users u INNER JOIN user_info ui ON u.user_id=ui.user_id AND u.user_id=$1;', [user_info.user_id]);
-        /* If user doesn't inserted details yet, return none */
-        if (info.rowCount === 0) {
-            console.log(user_info);
-            //res.json('None');
-            return res.json({user: user_info})
-        }
-        return res.json({user: info.rows[0]});
     } catch (error) {
       res.status(500).json({error: error.message});
     }
@@ -99,8 +81,8 @@ app.post("/update", async(req, res) =>{
         const user_info = req.body;
         // this code is to update existing user into system
         const updated_user = await pool.query (
-            `CALL upsert_for_user_info ($1::VARCHAR, $2::VARCHAR, $3::INTEGER, $4::BIGINT, $5::VARCHAR, $6::TIMESTAMP);`,
-            [user_info.first, user_info.last, user_info.id, user_info.phone, user_info.address, user_info.birthday]
+            `CALL upsert_for_user_info ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::INTEGER, $5::BIGINT, $6::VARCHAR, $7::DATE);`,
+            [user_info.first, user_info.last, user_info.head, user_info.id, user_info.phone, user_info.address, user_info.birthday]
         );
         res.json(updated_user);
     } catch (err) {
